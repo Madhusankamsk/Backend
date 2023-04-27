@@ -9,7 +9,6 @@ const bcrypt = require("bcrypt");
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 
-
 async function mailer(recieveremail, code) {
     //console.log("Mailer function called");
 
@@ -37,7 +36,6 @@ async function mailer(recieveremail, code) {
     console.log("Preview URL: %s ", nodemailer.getTestMessageUrl(info));
 }
 
-
 router.post('/verify', (req, res) => {
     console.log("Sent By client",req.body);
     const { email } = req.body;
@@ -64,7 +62,6 @@ router.post('/verify', (req, res) => {
     )
 });
 
-
 router.post('/changeusername',(req,res)=>{
     const{username,email} = req.body;
 
@@ -79,7 +76,6 @@ router.post('/changeusername',(req,res)=>{
         }
     );
 });
-
 
 router.post('/signup',async (req,res)=>{
     const { username,password,email} = req.body;
@@ -105,7 +101,6 @@ router.post('/signup',async (req,res)=>{
         }
     }
 });
-
 
 router.post('/verifyfp', (req, res) => {
     //console.log("Sent By client",req.body);
@@ -134,10 +129,6 @@ router.post('/verifyfp', (req, res) => {
     )
 });
 
-//$2b$08$nyQCeRIx2d5K0UiyhFen3OY0a8QKsBklDHSFmaYHXj23AJWLiQGTS
-//$2b$08$nyQCeRIx2d5K0UiyhFen3OY0a8QKsBklDHSFmaYHXj23AJWLiQGTS
-//$2b$08$crUp9AeMGZV4.fjdCrrvvOxFIwxJXeHwg2gVYLdDrq8xe4AZ0um3u
-
 router.post('/resetpassword', (req, res) => {
     const { email, password } = req.body;
 
@@ -164,7 +155,6 @@ router.post('/resetpassword', (req, res) => {
     }
 
 });
-
 
 router.post('/signin', (req, res) => {
     const { email, password } = req.body;
@@ -204,7 +194,140 @@ router.post('/signin', (req, res) => {
     }
 });
 
+// router.post('/otheruserdata',(req,res)=>{
+//     const {email} = req.body
+    
+//     //console.log(email);
+//     User.findOne({email:email}).then(savedUser=>{
 
+//         //console.log(savedUser);
+//         if(!savedUser){
+//             return res.status(422).json({ error: "Invalid Credentials" });   
+//         }
+//         else{
+//             console.log(savedUser);
+//             res.status(200).json({ message: "User Found", user: savedUser});
+//         }
+//     })
+// });
+
+router.post('/userdata',(req,res)=>{
+    const {authorization} = req.headers;
+    if(!authorization){
+        return req.status(401).json("You must be loged in first");
+    }
+    const token = authorization.replace("Bearer ","")
+    //console.log(token);
+
+    jwt.verify(token,process.env.JWT_SECRET,(err,payload)=>{
+        if(err){
+            return res.status(401).json({error: "Token Invalid"});
+        }
+        const {_id} = payload;
+        User.findById(_id).then(userdata => {
+            res.status(200).send({
+                message: "User Found",
+                user: userdata
+            })
+        })
+    });
+});
+
+router.post('/changepassword', (req, res) => {
+    const { oldpassword, newpassword, email } = req.body;
+
+    if (!oldpassword || !newpassword || !email) {
+        return res.status(422).json({ error: "Please add all the fields" });
+    }
+    else {
+        User.findOne({ email: email })
+            .then(async savedUser => {
+                if (savedUser) {
+                    bcrypt.compare(oldpassword, savedUser.password)
+                        .then(doMatch => {
+                            if (doMatch) {
+                                savedUser.password = newpassword;
+                                savedUser.save()
+                                    .then(user => {
+                                        res.json({ message: "Password Changed Successfully" });
+                                    })
+                                    .catch(err => {
+                                        // console.log(err);
+                                        return res.status(422).json({ error: "Server Error" });
+
+                                    })
+                            }
+                            else {
+                                return res.status(422).json({ error: "Invalid Credentials" });
+                            }
+                        })
+
+                }
+                else {
+                    return res.status(422).json({ error: "Invalid Credentials" });
+                }
+            })
+    }
+})
+
+router.post('/setusername', (req, res) => {
+    const { username, email } = req.body;
+    if (!username || !email) {
+        return res.status(422).json({ error: "Please add all the fields" });
+    }
+
+    User.find({ username }).then(async (savedUser) => {
+        if (savedUser.length > 0) {
+            return res.status(422).json({ error: "Username already exists" });
+        }
+        else {
+            User.findOne({ email: email })
+                .then(async savedUser => {
+                    if (savedUser) {
+                        savedUser.username = username;
+                        savedUser.save()
+                            .then(user => {
+                                res.json({ message: "Username Updated Successfully" });
+                            })
+                            .catch(err => {
+                                return res.status(422).json({ error: "Server Error" });
+                            })
+                    }
+                    else {
+                        return res.status(422).json({ error: "Invalid Credentials" });
+                    }
+                })
+        }
+    })
+
+
+
+
+})
+
+router.post('/setdescription', (req, res) => {
+    const { description, email } = req.body;
+    if (!description || !email) {
+        return res.status(422).json({ error: "Please add all the fields" });
+    }
+
+    User.findOne({ email: email })
+        .then(async savedUser => {
+            if (savedUser) {
+                savedUser.description = description;
+                savedUser.save()
+                    .then(user => {
+                        res.json({ message: "Description Updated Successfully" });
+                    })
+                    .catch(err => {
+                        return res.status(422).json({ error: "Server Error" });
+                    })
+            }
+            else {
+                return res.status(422).json({ error: "Invalid Credentials" });
+            }
+        })
+})
 
 
 module.exports = router;
