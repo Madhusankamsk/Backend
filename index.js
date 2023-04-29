@@ -6,10 +6,12 @@ require('./db');
 require('./models/User');
 
 const authRoutes = require('./routes/authRoutes');
+const uploadMediaRoutes = require('./routes/uploadMediaRoutes');
 const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 app.use(authRoutes);
+app.use(uploadMediaRoutes);
 
 
 app.get('/',(req,res)=>{
