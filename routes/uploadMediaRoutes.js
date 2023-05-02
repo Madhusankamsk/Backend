@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const User = mongoose.model("User");
+const Post = mongoose.model("Post");
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt");
 require('dotenv').config();
@@ -38,6 +39,35 @@ router.post('/addpost', (req, res) => {
                 return res.status(422).json({ error: "Invalid Credentials" })
             }
             savedUser.posts.push({ post, postdescription, likes: [], comments: [] });
+
+            //console.log(savedUser)
+
+
+            //to do task
+
+            const no = savedUser.followers.length
+            {
+                savedUser.followers.map((a)=>{
+                    //console.log(a);
+                    User.findOne({ email: a })
+                    .then((m) => {
+                        // if (!m) {
+                        //     return res.status(422).json({ error: "Invalid Credentials" })
+                        // }
+                        console.log(m._id);
+                        })
+
+
+                    const postr = new Post({posteremail:a,postid:no})
+                    console.log(postr);
+                    postr.save();
+
+                })
+            }
+
+
+
+
             savedUser.save()
                 .then(user => {
                     res.json({ message: "Post added successfully" })
@@ -49,7 +79,9 @@ router.post('/addpost', (req, res) => {
         .catch(err => {
             console.log(err);
         })
-})
+});
+
+
 
 
 module.exports = router
