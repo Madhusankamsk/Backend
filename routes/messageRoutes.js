@@ -65,9 +65,11 @@ router.post('/setusermessages', async (req, res) => {
 
 router.post('/getusermessages', async (req, res) => {
     const { userid } = req.body;
+
     console.log("USER ID RECEIVED - ", userid);
     User.findOne({ _id: userid })
         .then(user => {
+            //console.log(user.allmessages)
             res.status(200).send(user.allmessages);
         })
         .catch(err => {

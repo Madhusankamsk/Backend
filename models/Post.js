@@ -4,13 +4,37 @@ const bcrypt = require("bcrypt");
 
 const postSchema = new mongoose.Schema({
 
-    posteremail: {
+    username: {
         type: String,
         required: true
     },
-    postid:{
+    email: {
         type: String,
+        required: true
     },
+    profilepic: {
+        type: String,
+        default: '',
+        // required: true
+    },
+    posturl: {
+        type: String,
+        required: true
+    },
+    postdescrip: {
+        type: String,
+        required: true
+    },
+    like: {
+        type: Array,
+        default: []
+    },
+    comment: {
+        type: Array,
+        default: []
+    },
+
+
 
 },{
     timestamps: true

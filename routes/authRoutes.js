@@ -224,7 +224,7 @@ router.post('/userdata',(req,res)=>{
         }
         const {_id} = payload;
         User.findById(_id).then(userdata => {
-            console.log(userdata)
+            //console.log(userdata)
             res.status(200).send({
                 message: "User Found",
                 user: userdata
@@ -336,7 +336,7 @@ router.post('/searchuser', (req, res) => {
         return res.status(422).json({ error: "Please search a username" });
     }
 
-    User.find({ username: { $regex: keyword, $options: 'i' } })
+    User.find({ email: { $regex: keyword, $options: 'i' } })
         .then(user => {
             // console.log(user);
             let data = [];
@@ -570,8 +570,5 @@ router.post('/unfollowuser', (req, res) => {
         })
 })
 
-router.post('/postwall', async (req, res) => {
-
-})
     
 module.exports = router;

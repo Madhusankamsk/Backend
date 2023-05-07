@@ -40,31 +40,29 @@ router.post('/addpost', (req, res) => {
             }
             savedUser.posts.push({ post, postdescription, likes: [], comments: [] });
 
+
             //console.log(savedUser)
 
 
             //to do task
 
-            const no = savedUser.followers.length
-            {
-                savedUser.followers.map((a)=>{
-                    //console.log(a);
-                    User.findOne({ email: a })
-                    .then((m) => {
-                        // if (!m) {
-                        //     return res.status(422).json({ error: "Invalid Credentials" })
-                        // }
-                        console.log(m._id);
-                        })
-
-
-                    const postr = new Post({posteremail:a,postid:no})
-                    console.log(postr);
-                    postr.save();
-
-                })
-            }
-
+            // const no = savedUser.followers.length
+            // {
+            //     savedUser.followers.map((a)=>{
+            //         //console.log(a);
+            //         User.findOne({ email: a })
+            //         .then((m) => {
+            //             // if (!m) {
+            //             //     return res.status(422).json({ error: "Invalid Credentials" })
+            //             // }
+            //             console.log(m._id);
+            //             })
+            //     })
+            // }
+            
+            const postr = new Post({username:savedUser.username,email:savedUser.email,profilepic: savedUser.profilepic, posturl:post,postdescrip:postdescription})
+            console.log(postr);
+            postr.save();
 
 
 
@@ -81,6 +79,31 @@ router.post('/addpost', (req, res) => {
         })
 });
 
+
+// router.post('/feedwall',(req,res)=>{
+//     const {email} = req.body
+
+//     Post.findOne({email:email})
+//     .then(( postdata)=>{
+
+//         res.status(200).json({ message: "Done" });
+
+//          console.log(postdata)
+//     })
+
+// })
+
+
+router.get('/feedwall', async(req, res) => {
+    try {
+      const posts = await Post.find({});
+      res.json(posts);
+      console.log(posts);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error fetching posts' });
+    }
+  });
 
 
 
