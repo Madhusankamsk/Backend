@@ -8,6 +8,10 @@ const bcrypt = require("bcrypt");
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 
+//NodeMailer_password = "upioarqlybnlkvwx"
+//NodeMailer_email = "madhusankaugc97@gmail.com"
+
+
 async function mailer(recieveremail, code) {
     //console.log("Mailer function called");
 

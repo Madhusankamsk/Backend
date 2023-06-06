@@ -23,7 +23,6 @@ const postSchema = new mongoose.Schema({
     },
     postdescrip: {
         type: String,
-        required: true
     },
     like: {
         type: Array,
