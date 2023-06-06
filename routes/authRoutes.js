@@ -197,22 +197,22 @@ router.post('/signin', (req, res) => {
     }
 });
 
-// router.post('/otheruserdata',(req,res)=>{
-//     const {email} = req.body
+router.post('/otheruserdata',(req,res)=>{
+    const {email} = req.body
     
-//     //console.log(email);
-//     User.findOne({email:email}).then(savedUser=>{
+    //console.log(email);
+    User.findOne({email:email}).then(savedUser=>{
 
-//         //console.log(savedUser);
-//         if(!savedUser){
-//             return res.status(422).json({ error: "Invalid Credentials" });   
-//         }
-//         else{
-//             console.log(savedUser);
-//             res.status(200).json({ message: "User Found", user: savedUser});
-//         }
-//     })
-// });
+        //console.log(savedUser);
+        if(!savedUser){
+            return res.status(422).json({ error: "Invalid Credentials" });   
+        }
+        else{
+            console.log(savedUser);
+            res.status(200).json({ message: "User Found", user: savedUser});
+        }
+    })
+});
 
 router.post('/userdata',(req,res)=>{
     const {authorization} = req.headers;
