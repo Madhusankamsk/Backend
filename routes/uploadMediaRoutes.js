@@ -94,9 +94,9 @@ router.post('/addpost', (req, res) => {
 // })
 
 
-router.get('/feedwall', async(req, res) => {
+router.get('/feedwall', async (req, res) => {
     try {
-      const posts = await Post.find({});
+      const posts = await Post.find({}).sort({ timestamp: -1 });
       res.json(posts);
       console.log(posts);
     } catch (error) {
@@ -104,6 +104,7 @@ router.get('/feedwall', async(req, res) => {
       res.status(500).json({ message: 'Error fetching posts' });
     }
   });
+  
 
 
 
