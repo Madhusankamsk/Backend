@@ -7,9 +7,11 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt");
 require('dotenv').config();
 const nodemailer = require('nodemailer');
+const getAllUser = require('../middleware/authmid');
 
 //NodeMailer_password = "upioarqlybnlkvwx"
 //NodeMailer_email = "madhusankaugc97@gmail.com"
+
 
 
 async function mailer(recieveremail, code) {
@@ -159,7 +161,7 @@ router.post('/resetpassword', (req, res) => {
 
 });
 
-router.post('/signin', (req, res) => {
+router.post('/signin', getAllUser,(req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {

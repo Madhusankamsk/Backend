@@ -105,7 +105,15 @@ router.get('/feedwall', async (req, res) => {
     }
   });
   
-
+router.post('./like',async(req,res) =>{
+    try {
+        const { userId,posterId } = req.body;
+        console.log(userId)
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching posts' });
+    }
+})
 
 
 module.exports = router
