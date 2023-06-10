@@ -7,6 +7,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt");
 require('dotenv').config();
 const nodemailer = require('nodemailer');
+const getAllUser = require('../middleware/authmid');
+
 
 router.post('/setprofilepic',(req,res)=>{
     const {email,profilepic} = req.body;
@@ -94,9 +96,13 @@ router.post('/addpost', (req, res) => {
 // })
 
 
-router.get('/feedwall', async (req, res) => {
+<<<<<<< HEAD
+router.get('/feedwall',getAllUser, async (req, res) => {
+=======
+router.get('/feedwall', async(req, res) => {
+>>>>>>> parent of 3d50a92 (post sorting with timestamp)
     try {
-      const posts = await Post.find({}).sort({ timestamp: -1 });
+      const posts = await Post.find({});
       res.json(posts);
       console.log(posts);
     } catch (error) {
@@ -104,6 +110,7 @@ router.get('/feedwall', async (req, res) => {
       res.status(500).json({ message: 'Error fetching posts' });
     }
   });
+<<<<<<< HEAD
   
 router.post('./like',async(req,res) =>{
     try {
@@ -114,6 +121,9 @@ router.post('./like',async(req,res) =>{
         res.status(500).json({ message: 'Error fetching posts' });
     }
 })
+=======
+
+>>>>>>> parent of 3d50a92 (post sorting with timestamp)
 
 
 module.exports = router
